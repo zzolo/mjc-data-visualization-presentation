@@ -32,12 +32,23 @@
     gatherSlides: function() {
       var thisApp = this;
       var slide;
+      
       $('#slides .slide').each(function() {
         slide = new Slide;
         slide.set('el',  $(this));
         slide.set('slideNum',  thisApp.slideCount);
+        
+        // Get image
         if ($(this).attr('data-image') !== undefined) {
           slide.set('image', $(this).attr('data-image'));
+        }
+        
+        // Get iframe
+        if ($(this).attr('data-iframe') !== undefined) {
+          slide.set('iframe', $(this).attr('data-iframe'));
+        }
+        if ($(this).attr('data-iframe-location') !== undefined) {
+          slide.set('iframe-location', $(this).attr('data-iframe-location'));
         }
         
         thisApp.slides.add(slide);
@@ -58,13 +69,13 @@
       this.getDimensions();
       
       var $text = $('#current-slide-container p');
-      var size = (this.windowHeight * 1);
+      var size = (this.windowHeight * 3);
       $text.css('font-size', size + 'px');
 
       while (
         $text.outerHeight(true) > this.windowHeight ||
         $text.outerWidth(true) > this.windowWidth) {
-        size -= 10;
+        size -= 30;
         $text.css('font-size', size + 'px');
       }
     },
@@ -85,6 +96,22 @@
     getDimensions: function() {
       this.windowWidth = $(window).outerWidth(true);
       this.windowHeight = $(window).outerHeight(true);
+    },
+    
+    showIFrame: function() {
+      var thisApp = this;
+      var iframe = $('<iframe>').attr('height', '100%')
+        .attr('id', 'slide-iframe')
+        .attr('name', 'slide-iframe-named')
+        .attr('width', '100%')
+        .attr('frameborder', '0')
+        .attr('src', this.currentSlideObj.get('iframe'));
+        
+      $('#current-slide-container').append($('<div class="iframe-spacer">'));
+      $('#current-slide-container').append(iframe);
+        
+      // Doesn't seem to work
+      //$('#slide-iframe').contents().find("html, body").animate({ scrollTop: 500 }, 100);
     },
     
     showCurrentSlide: function() {
@@ -119,7 +146,11 @@
         
           this.currentSlideObj = slideToShow[0];
           $('#current-slide-container').html(
-            _.template(this.currentSlideObj.get('el').html(), {}));
+            _.template(this.currentSlideObj.get('el').html(), this.currentSlideObj.toJSON()));
+
+          if (this.currentSlideObj.get('iframe')) {
+            this.showIFrame();
+          }
 
           this.expandText();
           this.setBackground();
