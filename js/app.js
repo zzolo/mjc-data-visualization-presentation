@@ -39,7 +39,7 @@
         slide.set('slideNum',  thisApp.slideCount);
         
         // Get image
-        if ($(this).attr('data-image') !== undefined) {
+        if ($(this).attr('data-image') !== undefined && $(this).attr('data-image') != '') {
           slide.set('image', $(this).attr('data-image'));
         }
         

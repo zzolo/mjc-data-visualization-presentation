@@ -6,8 +6,9 @@ body {
   font-weight: bold;
 }
 
-a {
+a, a:hover, a:visited {
   text-decoration: none;
+  color: #1A53FF;
 }
 
 #current-slide-container {
@@ -36,7 +37,7 @@ a {
   left: 0;
 	word-wrap: break-word;
 	width: auto;
-	height: atuo;
+	height: auto;
   margin: 0;
   padding: 2%;
 }
